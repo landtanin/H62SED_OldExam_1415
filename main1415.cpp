@@ -5,7 +5,6 @@
 
 // #include "1415Header.h" no need header file. The instruction didn't ask to create header file
 
-using namespace std;
 
 using namespace std;
 
@@ -137,7 +136,7 @@ private:
 
 module_with_project_record::module_with_project_record(int _module_ID, int _module_score, int _project_mark):
 
-    module_score(_module_ID,module_score), // call the constructor of the base class
+    module_record(_module_ID,module_score), // call the constructor of the base class
 
     project_mark(_project_mark){
 
@@ -265,8 +264,7 @@ student_record::student_record(int _id_number, int _number_of_module, module_rec
 
     modules = new module_record*[number_of_module]; // modules is an array of type module_record
 
-    for(int i=0;i<number_of_module;i++) modules[i] = new module_record(*_modules[i]); // not sure why it has to create new module_record
-
+    for(int i=0;i<number_of_module;i++) modules[i] = new module_record(*_modules[i]); // module[i] is just a pointer (Slide 331)
 }
 
 student_record::~student_record(){ // student_record destructor
@@ -282,7 +280,7 @@ student_record::student_record(istream& in);{
 
 student_record::student_record(const student_record& s):id_number(s.id_number),number_of_module(s.number_of_module){ // student copy constructor
 
-    modules = new module_record*[number_of_module];
+    modules = new module_record*[number_of_module]; // just allocate the new array as in the constructor, no need to clear the array
 
     for(int i = 0;i<number_of_module;i++)
     {
@@ -297,9 +295,9 @@ const student_record& student_record::operator=(const student_record& s){ // stu
 
     id_number = s.id_number;
 
-    delete[] modules;
-
     number_of_module = s.number_of_module;
+
+    delete[] modules; // we not sure about the size of this array so we have to clear in and re-allocate (different from copy constructor)
 
     modules = new module_record*[number_of_module];
 
@@ -309,7 +307,7 @@ const student_record& student_record::operator=(const student_record& s){ // stu
 
     }
 
-    return(*this);
+    return(*this); // don't forget to return this for the operator=
 
 }
 
@@ -395,7 +393,7 @@ int student_record::number_of_failed(){
 
 istream& operator>>(istream& in,module_record &m){
 
-      in>>m.module_id>>m.module_score;
+      in>>m.module_ID>>m.module_score;
 
       return(in);
 
@@ -403,7 +401,7 @@ istream& operator>>(istream& in,module_record &m){
 
 ostream& operator<<(ostream& out,module_record &m){
 
-      out<<m.module_id<<" "<<m.module_score<<endl;
+      out<<m.module_ID<<" "<<m.module_score<<endl;
 
       return(out);
 
